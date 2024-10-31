@@ -1,0 +1,41 @@
+import unittest
+from flask import json
+from yourapp import create_app, db
+from yourapp.models import Product  # Adjust the import to match your project structure
+
+class ProductRoutesTestCase(unittest.TestCase):
+
+    def setUp(self):
+        # Create a test client
+        self.app = create_app()
+        self.app.config['TESTING'] = True
+        self.client = self.app.test_client()
+
+        # Create the database and the database table
+        with self.app.app_context():
+            db.create_all()
+            # Add a test product
+            self.product = Product(name='Test Product', description='A test product', price=100, in_stock=True)
+            db.session.add(self.product)
+            db.session.commit()
+
+    def tearDown(self):
+        # Remove the database after tests
+        with self.app.app_context():
+            db.drop_all()
+
+    def test_delete_product(self):
+        # Send a DELETE request to delete the product
+        response = self.client.delete(f'/products/{self.product.id}')
+        
+        # Assert that the response is 200 OK
+        self.assertEqual(response.status_code, 200)
+
+        # Try to fetch the deleted product
+        deleted_product_response = self.client.get(f'/products/{self.product.id}')
+        
+        # Assert that the product no longer exists
+        self.assertEqual(deleted_product_response.status_code, 404)  # Assuming the product is not found
+
+if __name__ == '__main__':
+    unittest.main()
