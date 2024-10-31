@@ -1,0 +1,30 @@
+from django.test import TestCase
+from yourapp.models import Product  # Adjust the import to match your project structure
+
+class ProductModelTest(TestCase):
+
+    def setUp(self):
+        # Create multiple test products
+        Product.objects.create(
+            name='Test Product 1',
+            description='First test product',
+            price=100,
+            in_stock=True
+        )
+        Product.objects.create(
+            name='Test Product 2',
+            description='Second test product',
+            price=150,
+            in_stock=False
+        )
+
+    def test_list_all_products(self):
+        # Fetch all products
+        products = Product.objects.all()
+
+        # Assert that we have two products
+        self.assertEqual(products.count(), 2)
+
+        # Assert that the names of the products are as expected
+        self.assertEqual(products[0].name, 'Test Product 1')
+        self.assertEqual(products[1].name, 'Test Product 2')
