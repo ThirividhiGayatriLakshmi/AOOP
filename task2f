@@ -1,0 +1,39 @@
+from django.test import TestCase
+from yourapp.models import Product  # Adjust the import to match your project structure
+
+class ProductModelTest(TestCase):
+
+    def setUp(self):
+        # Create test products with categories
+        Product.objects.create(
+            name='Electronics Product 1',
+            description='An electronic product',
+            price=100,
+            in_stock=True,
+            category='Electronics'
+        )
+        Product.objects.create(
+            name='Electronics Product 2',
+            description='Another electronic product',
+            price=150,
+            in_stock=False,
+            category='Electronics'
+        )
+        Product.objects.create(
+            name='Furniture Product 1',
+            description='A furniture product',
+            price=200,
+            in_stock=True,
+            category='Furniture'
+        )
+
+    def test_find_products_by_category(self):
+        # Fetch products by category
+        electronics = Product.objects.filter(category='Electronics')
+
+        # Assert that we found two products in the Electronics category
+        self.assertEqual(electronics.count(), 2)
+
+        # Assert that the names of the products match the expected values
+        self.assertEqual(electronics[0].name, 'Electronics Product 1')
+        self.assertEqual(electronics[1].name, 'Electronics Product 2')
