@@ -1,0 +1,45 @@
+import unittest
+from flask import json
+from yourapp import create_app, db
+from yourapp.models import Product  # Adjust the import to match your project structure
+
+class ProductRoutesTestCase(unittest.TestCase):
+
+    def setUp(self):
+        # Create a test client
+        self.app = create_app()
+        self.app.config['TESTING'] = True
+        self.client = self.app.test_client()
+
+        # Create the database and the database table
+        with self.app.app_context():
+            db.create_all()
+            # Add test products with availability status
+            self.product1 = Product(name='Test Product A', description='Available product', price=100, in_stock=True)
+            self.product2 = Product(name='Test Product B', description='Unavailable product', price=150, in_stock=False)
+            self.product3 = Product(name='Test Product C', description='Another available product', price=200, in_stock=True)
+            db.session.add(self.product1)
+            db.session.add(self.product2)
+            db.session.add(self.product3)
+            db.session.commit()
+
+    def tearDown(self):
+        # Remove the database after tests
+        with self.app.app_context():
+            db.drop_all()
+
+    def test_list_by_availability(self):
+        # Send a GET request to list products by availability
+        response = self.client.get('/products?available=true')
+        data = json.loads(response.data)
+
+        # Assert that the response is 200 OK
+        self.assertEqual(response.status_code, 200)
+
+        # Assert that the list contains only the products that are in stock
+        self.assertEqual(len(data), 2)  # There are 2 available products
+        self.assertIn('Test Product A', [product['name'] for product in data])
+        self.assertIn('Test Product C', [product['name'] for product in data])
+
+if __name__ == '__main__':
+    unittest.main()
