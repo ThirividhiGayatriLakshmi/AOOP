@@ -1,0 +1,11 @@
+Feature: Product Management
+
+  Scenario: Reading a Product
+    Given the following product exists:
+      | id | name        | description        | price | in_stock | category    |
+      | 1  | Test Product | A product for testing | 9.99 | true     | Test Category |
+    
+    When I request to view the product with id 1
+    Then I should see the product details:
+      | id | name        | description        | price | in_stock | category    |
+      | 1  | Test Product | A product for testing | 9.99 | true     | Test Category |
