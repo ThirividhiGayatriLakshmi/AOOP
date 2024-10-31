@@ -1,0 +1,14 @@
+Feature: Product Management
+
+  Scenario: Updating a Product
+    Given the following product exists:
+      | id | name        | description         | price | in_stock | category     |
+      | 1  | Test Product | A product for testing  | 9.99 | true     | Test Category  |
+    
+    When I update the product with id 1 to have:
+      | name         | description            | price | in_stock | category     |
+      | Updated Product | An updated product description | 12.99 | false     | Updated Category |
+      
+    Then the product with id 1 should have:
+      | id | name         | description            | price | in_stock | category     |
+      | 1  | Updated Product | An updated product description | 12.99 | false     | Updated Category |
