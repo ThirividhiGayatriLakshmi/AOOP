@@ -1,0 +1,14 @@
+Feature: Product Management
+
+  Scenario: Searching a Product by Name
+    Given the following products exist:
+      | id | name          | description         | price | in_stock | category     |
+      | 1  | Test Product 1 | A sample product      | 9.99 | true     | Test Category  |
+      | 2  | Test Product 2 | Another sample product | 12.49 | false     | Another Category  |
+      | 3  | Awesome Widget | A very awesome product | 15.99 | true     | Widgets       |
+
+    When I search for a product with the name "Awesome Widget"
+
+    Then I should see the following product:
+      | id | name          | description         | price | in_stock | category     |
+      | 3  | Awesome Widget | A very awesome product | 15.99 | true     | Widgets       |
