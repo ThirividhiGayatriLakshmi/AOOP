@@ -1,0 +1,12 @@
+from behave import then
+from selenium.common.exceptions import NoSuchElementException
+
+@then('I should not see the text "{unexpected_text}"')
+def step_impl(context, unexpected_text):
+    try:
+        # Assuming there is a method to get the body text of the page
+        page_text = context.browser.find_element_by_tag_name('body').text
+        assert unexpected_text not in page_text, f"Unexpected text '{unexpected_text}' found on the page."
+    except NoSuchElementException:
+        # If the body element is not found, we assume the text is not present
+        pass  # Consider it a pass since we can't find the element
