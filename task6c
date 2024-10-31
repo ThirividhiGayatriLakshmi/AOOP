@@ -1,0 +1,10 @@
+Feature: Product Management
+
+  Scenario: Deleting a Product
+    Given the following product exists:
+      | id | name        | description         | price | in_stock | category     |
+      | 1  | Test Product | A product for testing  | 9.99 | true     | Test Category  |
+
+    When I delete the product with id 1
+
+    Then the product with id 1 should no longer exist
