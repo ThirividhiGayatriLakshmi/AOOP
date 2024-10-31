@@ -1,0 +1,21 @@
+import json
+from yourapp import db
+from yourapp.models import Product  # Adjust the import to match your project structure
+
+def load_background_data():
+    """Load background data into the database."""
+    with open('data/products.json') as f:  # Assuming the products data is in JSON format
+        products = json.load(f)
+    
+    for product in products:
+        new_product = Product(
+            name=product['name'],
+            description=product['description'],
+            price=product['price'],
+            in_stock=product['in_stock'],
+            category=product['category']
+        )
+        db.session.add(new_product)
+    
+    db.session.commit()
+    print("Background data loaded successfully.")
