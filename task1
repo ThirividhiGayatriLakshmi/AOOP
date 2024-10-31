@@ -1,0 +1,16 @@
+import factory
+from yourapp.models import Product  # Adjust the import to match your project structure
+
+class ProductFactory(factory.Factory):
+    class Meta:
+        model = Product  # Specify the model that this factory will create
+
+    id = factory.Sequence(lambda n: n + 1)  # Generates unique IDs starting from 1
+    name = factory.Faker('word')  # Generates a random word for the product name
+    description = factory.Faker('sentence')  # Generates a random sentence for the product description
+    price = factory.Faker('random_number', digits=3)  # Generates a random price (0-999)
+    in_stock = factory.Faker('boolean')  # Generates a random boolean for in-stock status
+
+# Example usage:
+# product = ProductFactory()  # This will create a new fake product instance
+# print(product.name)  # Access the generated product name
