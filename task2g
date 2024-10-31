@@ -1,0 +1,36 @@
+from django.test import TestCase
+from yourapp.models import Product  # Adjust the import to match your project structure
+
+class ProductModelTest(TestCase):
+
+    def setUp(self):
+        # Create test products with different availability statuses
+        Product.objects.create(
+            name='Available Product 1',
+            description='An available product',
+            price=100,
+            in_stock=True
+        )
+        Product.objects.create(
+            name='Out of Stock Product 1',
+            description='An out-of-stock product',
+            price=150,
+            in_stock=False
+        )
+        Product.objects.create(
+            name='Available Product 2',
+            description='Another available product',
+            price=200,
+            in_stock=True
+        )
+
+    def test_find_products_by_availability(self):
+        # Fetch available products (in stock)
+        available_products = Product.objects.filter(in_stock=True)
+
+        # Assert that we found two available products
+        self.assertEqual(available_products.count(), 2)
+
+        # Assert that the names of the available products match the expected values
+        self.assertEqual(available_products[0].name, 'Available Product 1')
+        self.assertEqual(available_products[1].name, 'Available Product 2')
