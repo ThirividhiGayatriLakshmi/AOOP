@@ -1,0 +1,22 @@
+from django.test import TestCase
+from yourapp.models import Product  # Adjust the import to match your project structure
+
+class ProductModelTest(TestCase):
+
+    def setUp(self):
+        # Create a test product
+        self.product = Product.objects.create(
+            name='Test Product',
+            description='A test product for unit testing',
+            price=100,
+            in_stock=True
+        )
+
+    def test_delete_product(self):
+        # Delete the product
+        product_id = self.product.id
+        self.product.delete()
+
+        # Try to fetch the product and assert it raises a DoesNotExist exception
+        with self.assertRaises(Product.DoesNotExist):
+            Product.objects.get(id=product_id)
