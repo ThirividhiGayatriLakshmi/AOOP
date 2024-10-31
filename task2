@@ -1,0 +1,23 @@
+from django.test import TestCase
+from yourapp.models import Product  # Adjust the import to match your project structure
+
+class ProductModelTest(TestCase):
+
+    def setUp(self):
+        # Create a test product
+        self.product = Product.objects.create(
+            name='Test Product',
+            description='A test product for unit testing',
+            price=100,
+            in_stock=True
+        )
+
+    def test_read_product(self):
+        # Fetch the product we just created
+        product = Product.objects.get(id=self.product.id)
+        
+        # Check if the fetched product matches the created product
+        self.assertEqual(product.name, 'Test Product')
+        self.assertEqual(product.description, 'A test product for unit testing')
+        self.assertEqual(product.price, 100)
+        self.assertTrue(product.in_stock)
