@@ -1,0 +1,15 @@
+Feature: Product Management
+
+  Scenario: Searching a Product by Availability
+    Given the following products exist:
+      | id | name        | description         | price | in_stock | category     |
+      | 1  | Test Product 1 | Available product        | 9.99 | true     | Test Category  |
+      | 2  | Test Product 2 | Unavailable product      | 12.49 | false     | Another Category  |
+      | 3  | Test Product 3 | Another available product | 5.99 | true     | Test Category  |
+
+    When I search for available products
+
+    Then I should see the following products:
+      | id | name        | description         | price | in_stock | category     |
+      | 1  | Test Product 1 | Available product        | 9.99 | true     | Test Category  |
+      | 3  | Test Product 3 | Another available product | 5.99 | true     | Test Category  |
