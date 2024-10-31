@@ -1,0 +1,15 @@
+Feature: Product Management
+
+  Scenario: Searching a Product by Category
+    Given the following products exist:
+      | id | name        | description         | price | in_stock | category     |
+      | 1  | Test Product 1 | A product in Test Category | 9.99 | true     | Test Category  |
+      | 2  | Test Product 2 | A product in Another Category | 12.49 | false     | Another Category  |
+      | 3  | Test Product 3 | Another product in Test Category | 5.99 | true     | Test Category  |
+
+    When I search for products in the category "Test Category"
+
+    Then I should see the following products:
+      | id | name        | description         | price | in_stock | category     |
+      | 1  | Test Product 1 | A product in Test Category | 9.99 | true     | Test Category  |
+      | 3  | Test Product 3 | Another product in Test Category | 5.99 | true     | Test Category  |
