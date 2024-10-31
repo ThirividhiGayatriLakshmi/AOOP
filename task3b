@@ -1,0 +1,53 @@
+import unittest
+from flask import json
+from yourapp import create_app, db
+from yourapp.models import Product  # Adjust the import to match your project structure
+
+class ProductRoutesTestCase(unittest.TestCase):
+
+    def setUp(self):
+        # Create a test client
+        self.app = create_app()
+        self.app.config['TESTING'] = True
+        self.client = self.app.test_client()
+
+        # Create the database and the database table
+        with self.app.app_context():
+            db.create_all()
+            # Add a test product
+            self.product = Product(name='Test Product', description='A test product', price=100, in_stock=True)
+            db.session.add(self.product)
+            db.session.commit()
+
+    def tearDown(self):
+        # Remove the database after tests
+        with self.app.app_context():
+            db.drop_all()
+
+    def test_update_product(self):
+        # Data to update the product
+        updated_data = {
+            'name': 'Updated Product',
+            'description': 'An updated product description',
+            'price': 150,
+            'in_stock': False
+        }
+
+        # Send a PUT request to update the product
+        response = self.client.put(f'/products/{self.product.id}', json=updated_data)
+        
+        # Assert that the response is 200 OK
+        self.assertEqual(response.status_code, 200)
+
+        # Fetch the updated product to verify the changes
+        updated_product_response = self.client.get(f'/products/{self.product.id}')
+        data = json.loads(updated_product_response.data)
+
+        # Assert that the returned data matches the updated values
+        self.assertEqual(data['name'], 'Updated Product')
+        self.assertEqual(data['description'], 'An updated product description')
+        self.assertEqual(data['price'], 150)
+        self.assertEqual(data['in_stock'], False)
+
+if __name__ == '__main__':
+    unittest.main()
