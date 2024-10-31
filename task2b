@@ -1,0 +1,30 @@
+from django.test import TestCase
+from yourapp.models import Product  # Adjust the import to match your project structure
+
+class ProductModelTest(TestCase):
+
+    def setUp(self):
+        # Create a test product
+        self.product = Product.objects.create(
+            name='Test Product',
+            description='A test product for unit testing',
+            price=100,
+            in_stock=True
+        )
+
+    def test_update_product(self):
+        # Update the product's attributes
+        self.product.name = 'Updated Product'
+        self.product.description = 'An updated test product for unit testing'
+        self.product.price = 150
+        self.product.in_stock = False
+        self.product.save()  # Save the changes
+
+        # Fetch the updated product
+        updated_product = Product.objects.get(id=self.product.id)
+
+        # Assert that the updated values are as expected
+        self.assertEqual(updated_product.name, 'Updated Product')
+        self.assertEqual(updated_product.description, 'An updated test product for unit testing')
+        self.assertEqual(updated_product.price, 150)
+        self.assertFalse(updated_product.in_stock)
