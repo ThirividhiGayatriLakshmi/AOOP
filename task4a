@@ -1,0 +1,21 @@
+from flask import Blueprint, jsonify, request
+from yourapp.models import Product  # Adjust the import to match your project structure
+from yourapp import db  # Assuming you're using SQLAlchemy
+
+bp = Blueprint('products', __name__)
+
+@bp.route('/products/<int:product_id>', methods=['GET'])
+def read_product(product_id):
+    """Retrieve a product by its ID."""
+    product = Product.query.get(product_id)
+    if product is None:
+        return jsonify({'error': 'Product not found'}), 404
+    
+    return jsonify({
+        'id': product.id,
+        'name': product.name,
+        'description': product.description,
+        'price': product.price,
+        'in_stock': product.in_stock,
+        'category': product.category  # Include category if needed
+    }), 200
