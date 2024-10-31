@@ -1,0 +1,45 @@
+import unittest
+from flask import json
+from yourapp import create_app, db
+from yourapp.models import Product  # Adjust the import to match your project structure
+
+class ProductRoutesTestCase(unittest.TestCase):
+
+    def setUp(self):
+        # Create a test client
+        self.app = create_app()
+        self.app.config['TESTING'] = True
+        self.client = self.app.test_client()
+
+        # Create the database and the database table
+        with self.app.app_context():
+            db.create_all()
+            # Add test products
+            self.product1 = Product(name='Test Product 1', description='A test product', price=100, in_stock=True)
+            self.product2 = Product(name='Test Product 2', description='Another test product', price=150, in_stock=False)
+            db.session.add(self.product1)
+            db.session.add(self.product2)
+            db.session.commit()
+
+    def tearDown(self):
+        # Remove the database after tests
+        with self.app.app_context():
+            db.drop_all()
+
+    def test_list_all_products(self):
+        # Send a GET request to list all products
+        response = self.client.get('/products')
+        data = json.loads(response.data)
+
+        # Assert that the response is 200 OK
+        self.assertEqual(response.status_code, 200)
+
+        # Assert that the list contains the correct number of products
+        self.assertEqual(len(data), 2)
+
+        # Assert that the returned data matches the expected values
+        self.assertIn('Test Product 1', [product['name'] for product in data])
+        self.assertIn('Test Product 2', [product['name'] for product in data])
+
+if __name__ == '__main__':
+    unittest.main()
